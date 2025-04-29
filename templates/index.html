@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style type="text/css">
+        img.ctrlbtn {
+            width: 96px;
+            height: 96px;
+        }
+    </style>
+  </head>
+  <body>
+<script>
+function send_req(url) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.send();
+    xhr.responseType = "json";
+    xhr.onload = () => {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        const data = xhr.response;
+        console.log(data);
+      } else {
+        console.log(`Error: ${xhr.status}`);
+      }
+    };
+}
+
+function doStop() {send_req('/api/stop');}
+function doForward() {send_req('/api/forward');}
+function doBackward() {send_req('/api/backward');}
+function doLeft() {send_req('/api/left');}
+function doRight() {send_req('/api/right');}
+function doLeftForward() {send_req('/api/left_forward');}
+function doRightForward() {send_req('/api/right_forward');}
+function doLeftBackward() {send_req('/api/left_backward');}
+function doRightBackward() {send_req('/api/right_backward');}
+function doLeftSpin() {send_req('/api/left_spin');}
+function doRightSpin() {send_req('/api/right_spin');}
+
+</script>
+    <h1>Mecanum Controller</h1>
+    <table class="table">
+      <tr>
+        <td scope="col"><img src="images/left_forward.svg" class="ctrlbtn" alt="left forward" title="left forward" onclick="doLeftForward();"></td>
+        <td scope="col"><img src="images/forward.svg" class="ctrlbtn" alt="forward" title="forward" onclick="doForward();"></td>
+        <td scope="col"><img src="images/right_forward.svg" class="ctrlbtn" alt="right forward" title="right forward" onclick="doRightForward();"></td>
+      </tr>
+      <tr>
+        <td scope="col"><img src="images/left.svg" class="ctrlbtn" alt="left" title="left" onclick="doLeft();"></td>
+        <td scope="col"><img src="images/stop.svg" class="ctrlbtn" alt="stop" title="stop" onclick="doStop();"></td>
+        <td scope="col"><img src="images/right.svg" class="ctrlbtn" alt="right" title="right" onclick="doRight();"></td>
+      </tr>
+      <tr>
+        <td scope="col"><img src="images/left_backward.svg" class="ctrlbtn" alt="left backward" title="left backward" onclick="doLeftBackward();"></td>
+        <td scope="col"><img src="images/backward.svg" class="ctrlbtn" alt="backward" title="backward" onclick="doBackward();"></td>
+        <td scope="col"><img src="images/right_backward.svg" class="ctrlbtn" alt="right backward" title="right backward" onclick="doRightBackward();"></td>
+      </tr>
+      <tr>
+        <td scope="col"><img src="images/left_spin.svg" class="ctrlbtn" alt="left spin" title="left spin" onclick="doLeftSpin();"></td>
+        <td scope="col"><img src="images/right_spin.svg" class="ctrlbtn" alt="right spin" title="right spin" onclick="doRightSpin();"></td>
+      </tr>
+    </table>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+  </body>
+</html>
