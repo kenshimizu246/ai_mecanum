@@ -2,38 +2,24 @@ from flask import Flask, jsonify, request, render_template, Response
 
 import mecanum_drive as md
 
-import picame2_lib as pc
-from picame2_lib import MyCamera, MyConf
-# from camera import VideoCamera
+from picame2_lib import MyCamera, MyConf, MyThread
 import cv2
+import time
+import threading
+import multiprocessing
+import queue
+
+
+
 
 def create_app():
-    myc = pc.MyCamera(pc.MyConf())
-
     app = Flask(__name__, static_folder="./templates/images")
     app.logger.info('created Flask')
 
     dv = md.MecanumDrive(__name__)
-    app.logger.info('created mecanum drive')
 
-    app.logger.info('Camera initialization has done!')
-
-#    @app.before_first_request
-#    def activate_job():
-#        def run_job():
-#            while True:
-#                print("Run recurring task")
-#                time.sleep(3)
-#
-#        thread = threading.Thread(target=run_job)
-#        thread.start()
-
-#     @app.before_request
-#    @app.before_first_request
-#    def init():
-#        print("MyCamera start!")
-#        myc = pc.MyCamera(pc.MyConf())
-#        print("MyCamera done!")
+    myt = MyThread()
+    myt.start()
 
     def shutdown_server():
         func = request.environ.get('werkzeug.server.shutdown')
@@ -107,18 +93,26 @@ def create_app():
         return render_template("index.html")
 
     def gen(_vc):
+        print("gen...")
+        last_id = -1
         while True:
+            print("gen.loop...")
             app.logger.info('try to get frame.')
-            frame = _vc.get_frame()
-            app.logger.info('got frame.')
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-            app.logger.info('loop done.')
+            (id, frame) = _vc.get_frame()
+            print("gen.got.frame...{}:{}".format(id, len(frame)))
+            if(id > -1 and frame is not None):
+                last_id = id
+                app.logger.info('got frame.')
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+                app.logger.info('loop done.')
+            time.sleep(0.05)
+            app.logger.info('frame done!')
 
     @app.route('/video_feed')
     def video_feed():
-        # return Response(gen(VideoCamera(myc)),
-        return Response(gen(myc),
+        print("video_feed...")
+        return Response(gen(myt),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
     print("done create_app()")

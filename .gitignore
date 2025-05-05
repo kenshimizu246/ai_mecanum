@@ -172,3 +172,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# vim
+*.swp
+*.swo
+
+# 
+*.tmp
+*.org
+*.bkup
