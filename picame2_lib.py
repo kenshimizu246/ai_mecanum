@@ -46,18 +46,15 @@ def parse_detections(metadata):
             boxes = boxes / input_h
         boxes = np.array_split(boxes, 4, axis=1)
         boxes = zip(*boxes)
-#        Detection(box, category, score, metadata, mycam.convert_inference_coords(coords, metadata))
     detections = [
         Detection(box, category, score, metadata)
         for box, score, category in zip(boxes, scores, classes)
         if score > threshold
     ]
-    print("detections:{}".format(len(detections)))
     return detections
 
 
 def draw_detections(jobs):
-    print("start draw_detections...")
     global mycam
     global gcnt
     global gframe
@@ -104,11 +101,10 @@ def draw_detections(jobs):
                     color = (255, 0, 0)  # red
                     cv2.putText(m.array, "ROI", (b_x + 5, b_y + 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
                     cv2.rectangle(m.array, (b_x, b_y), (b_x + b_w, b_y + b_h), (255, 0, 0, 0))
-                ret, buffer = cv2.imencode('.jpg', m.array.copy())
+                # ret, buffer = cv2.imencode('.jpg', m.array.copy())
+                ret, buffer = cv2.imencode('.jpg', m.array)
                 gframe = buffer.tobytes()
                 gcnt = gcnt + 1
-                print("put frame:{}:{}".format(gcnt, len(gframe)))
-
         finally:
             request.release()
 

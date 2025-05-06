@@ -93,21 +93,15 @@ def create_app():
         return render_template("index.html")
 
     def gen(_vc):
-        print("gen...")
+        print("start gen...")
         last_id = -1
         while True:
-            print("gen.loop...")
-            app.logger.info('try to get frame.')
             (id, frame) = _vc.get_frame()
-            print("gen.got.frame...{}:{}".format(id, len(frame)))
-            if(id > -1 and frame is not None):
+            if(id > -1 and id > last_id and frame is not None):
                 last_id = id
-                app.logger.info('got frame.')
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-                app.logger.info('loop done.')
-            time.sleep(0.05)
-            app.logger.info('frame done!')
+            time.sleep(0.01)
 
     @app.route('/video_feed')
     def video_feed():
