@@ -13,8 +13,8 @@ from picamera2.devices import IMX500
 from picamera2.devices.imx500 import (NetworkIntrinsics, postprocess_nanodet_detection)
 
 mycam = None
-gcnt = 0
 gframe = None
+gcnt = 0
 
 class Detection:
     def __init__(self, coords, category, conf, metadata):
@@ -56,10 +56,12 @@ def parse_detections(metadata):
 
 def draw_detections(jobs):
     global mycam
-    global gcnt
+    global evtMgr
     global gframe
+    global gcnt
     labels = mycam.get_labels()
     last_detections = []
+    cnt = 0
     while(job := jobs.get()) is not None:
         request, async_result = job
         try:
@@ -103,8 +105,9 @@ def draw_detections(jobs):
                     cv2.rectangle(m.array, (b_x, b_y), (b_x + b_w, b_y + b_h), (255, 0, 0, 0))
                 # ret, buffer = cv2.imencode('.jpg', m.array.copy())
                 ret, buffer = cv2.imencode('.jpg', m.array)
-                gframe = buffer.tobytes()
                 gcnt = gcnt + 1
+                gframe = buffer.tobytes()
+                evtMgr.send_event(NewFrameEvent(gcnt, gframe))
         finally:
             request.release()
 
@@ -164,11 +167,6 @@ class MyCamera():
     def get_myconf(self):
         return self._myconf
 
-    def get_frame(self):
-        global gcnt
-        global gframe
-        return (gcnt, gframe)
-
     def get_labels(self):
         if(not self._labels):
             labels = self._intrinsics.labels
@@ -177,17 +175,54 @@ class MyCamera():
             self._labels = labels
         return self._labels
 
+
+class NewFrameEvent:
+    def __init__(self, id, frame):
+        self._id = id
+        self._frame = frame
+
+    def get_id(self):
+        return self._id
+
+    def get_frame(self):
+        return self._frame
+
+
+class EventManager():
+    def __init__(self):
+        self._event_queues = []
+
+    def add_event_queue(self):
+        q = queue.Queue(1)
+        qq = self._event_queues.copy()
+        qq.append(q)
+        self._event_queues = qq
+        return q
+
+    def remove_event_queue(self, q):
+        self._event_queues.remove(q)
+
+    def send_event(self, event):
+        qq = self._event_queues
+        for q in qq:
+            q.put(event)
+
+evtMgr = EventManager()
+
 class MyThread(threading.Thread):
     def __init__(self):
         super(MyThread, self).__init__()
 
-    def get_frame(self):
-        global gcnt
-        global gframe
-        return (gcnt, gframe)
+    def add_event_queue(self):
+        global evtMgr
+        return evtMgr.add_event_queue()
+
+    def remove_event_queue(self, q):
+        global evtMgr
+        evtMgr.remove_event_queue(q)
 
     def run(self):
-        global mycam
+        global mycam, evtMgr
         mycam = MyCamera(MyConf())
         pool = multiprocessing.Pool(processes=4)
         jobs = queue.Queue()

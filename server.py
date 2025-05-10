@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, render_template, Response
 
 import mecanum_drive as md
 
-from picame2_lib import MyCamera, MyConf, MyThread
+from picame2_lib import MyCamera, MyConf, MyThread, evtMgr
 import cv2
 import time
 import threading
@@ -94,14 +94,14 @@ def create_app():
 
     def gen(_vc):
         print("start gen...")
-        last_id = -1
-        while True:
-            (id, frame) = _vc.get_frame()
-            if(id > -1 and id > last_id and frame is not None):
-                last_id = id
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-            time.sleep(0.01)
+        eq = _vc.add_event_queue()
+        try:
+            while(evt := eq.get()) is not None:
+               frame = evt.get_frame()
+               yield (b'--frame\r\n'
+                      b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+        finally:
+            _vc.remove_event_queue(eq)
 
     @app.route('/video_feed')
     def video_feed():
