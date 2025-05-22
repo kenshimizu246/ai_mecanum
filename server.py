@@ -8,14 +8,19 @@ from picame2_lib import MyCamera, MyConf, MyThread, evtMgr
 import cv2
 import time
 import threading
+from threading import Event
 import multiprocessing
 import queue
 
 
 def create_app():
     app = Flask(__name__, static_folder="./templates/images")
+    app.config['SECRET_KEY'] = 'secret!'
     app.logger.info('created Flask')
-    socketio = SocketIO(app, async_mode=None)
+    socketio = SocketIO(app)
+    thread_event = Event()
+    thread_lock = threading.RLock()
+    
 
     dv = md.MecanumDrive(__name__)
 
@@ -32,14 +37,28 @@ def create_app():
         func()
         return 0
 
-    def background():
-        while True:
-            socketio.sleep(1)
-            data1 = readData(0x76)
-            data2 = mh_z19.read_all()
-            data = {**data1, **data2}
-            print(data)
-            socketio.emit('sensor_data', data, namespace='/data')
+    def background_thread():
+        global thread
+        try:
+            while thread_event.is_set():
+                socketio.sleep(1)
+                data1 = sensor.readData(0x76)
+                data2 = sensor.mh_z19.read_all()
+                data = {**data1, **data2}
+                print(data)
+                socketio.emit('sensor_data', data, namespace='/data')
+        finally:
+            thread_event.clear()
+            thread = None
+ 
+
+    @socketio.on('message', namespace='/data')
+    def handle_message(message):
+        data1 = sensor.readData(0x76)
+        data2 = sensor.mh_z19.read_all()
+        data = {**data1, **data2}
+        print("request:{}".format(data))
+        print("message: {} : {}".format(message, data))
 
     @app.route('/api/stop', methods=['GET'])
     def stop():
@@ -103,11 +122,15 @@ def create_app():
 
     @app.route("/")
     def index():
-        socketio.start_background_task(target=background)
         return render_template("index.html")
 
     def gen(_vc):
         print("start gen...")
+        global thread
+        with thread_lock:
+            if thread is None:
+                thread_event.set()
+                thread = socketio.start_background_task(target=background_thread)
         eq = _vc.add_event_queue()
         try:
             while(evt := eq.get()) is not None:
@@ -127,6 +150,7 @@ def create_app():
     return app
 
 if __name__ == '__main__':
+    thread = None
     app = create_app()
     app.run(debug=True, host='0.0.0.0', port=5000, use_reloader=False)
     
