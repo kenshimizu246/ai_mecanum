@@ -20,7 +20,6 @@ def create_app():
     socketio = SocketIO(app)
     thread_event = Event()
     thread_lock = threading.RLock()
-    
 
     dv = md.MecanumDrive(__name__)
 
