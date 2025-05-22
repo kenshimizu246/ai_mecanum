@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request, render_template, Response
+from flask_socketio import SocketIO, emit
 
 import mecanum_drive as md
+import bme280_mh_z19 as sensor
 
 from picame2_lib import MyCamera, MyConf, MyThread, evtMgr
 import cv2
@@ -10,13 +12,15 @@ import multiprocessing
 import queue
 
 
-
-
 def create_app():
     app = Flask(__name__, static_folder="./templates/images")
     app.logger.info('created Flask')
+    socketio = SocketIO(app, async_mode=None)
 
     dv = md.MecanumDrive(__name__)
+
+    sensor.setup()
+    sensor.get_calib_param()
 
     myt = MyThread()
     myt.start()
@@ -27,6 +31,15 @@ def create_app():
             raise RuntimeError('Not running with the Werkzeug Server')
         func()
         return 0
+
+    def background():
+        while True:
+            socketio.sleep(1)
+            data1 = readData(0x76)
+            data2 = mh_z19.read_all()
+            data = {**data1, **data2}
+            print(data)
+            socketio.emit('sensor_data', data, namespace='/data')
 
     @app.route('/api/stop', methods=['GET'])
     def stop():
@@ -90,6 +103,7 @@ def create_app():
 
     @app.route("/")
     def index():
+        socketio.start_background_task(target=background)
         return render_template("index.html")
 
     def gen(_vc):
