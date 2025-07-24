@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, render_template, Response
 from flask_socketio import SocketIO, emit
 
 import mecanum_drive as md
-import bme280_mh_z19 as sensor
+
 
 from picame2_lib import MyCamera, MyConf, MyThread, evtMgr
 import cv2
@@ -12,6 +12,7 @@ from threading import Event
 import multiprocessing
 import queue
 
+is_sensor = False
 
 def create_app():
     app = Flask(__name__, static_folder="./templates/images")
@@ -23,8 +24,14 @@ def create_app():
 
     dv = md.MecanumDrive(__name__)
 
-    sensor.setup()
-    sensor.get_calib_param()
+    try:
+        import bme280_mh_z19 as sensor
+        is_sensor = True
+        sensor.setup()
+        sensor.get_calib_param()
+    except OSError:
+        print("bme280_mh_z19 error")
+        is_sensor = False
 
     myt = MyThread()
     myt.start()
@@ -41,23 +48,24 @@ def create_app():
         try:
             while thread_event.is_set():
                 socketio.sleep(1)
-                data1 = sensor.readData(0x76)
-                data2 = sensor.mh_z19.read_all()
-                data = {**data1, **data2}
-                print(data)
-                socketio.emit('sensor_data', data, namespace='/data')
+                if(is_sensor):
+                    data1 = sensor.readData(0x76)
+                    data2 = sensor.mh_z19.read_all()
+                    data = {**data1, **data2}
+                    print(data)
+                    socketio.emit('sensor_data', data, namespace='/data')
         finally:
             thread_event.clear()
             thread = None
  
 
-    @socketio.on('message', namespace='/data')
-    def handle_message(message):
-        data1 = sensor.readData(0x76)
-        data2 = sensor.mh_z19.read_all()
-        data = {**data1, **data2}
-        print("request:{}".format(data))
-        print("message: {} : {}".format(message, data))
+#    @socketio.on('message', namespace='/data')
+#    def handle_message(message):
+#        data1 = sensor.readData(0x76)
+#        data2 = sensor.mh_z19.read_all()
+#        data = {**data1, **data2}
+#        print("request:{}".format(data))
+#        print("message: {} : {}".format(message, data))
 
     @app.route('/api/stop', methods=['GET'])
     def stop():

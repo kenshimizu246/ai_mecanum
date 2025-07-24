@@ -107,7 +107,7 @@ def draw_detections(jobs):
                 ret, buffer = cv2.imencode('.jpg', m.array)
                 gcnt = gcnt + 1
                 gframe = buffer.tobytes()
-                evtMgr.send_event(NewFrameEvent(gcnt, gframe))
+                evtMgr.send_event(NewFrameEvent(gcnt))
         finally:
             request.release()
 
@@ -177,15 +177,16 @@ class MyCamera():
 
 
 class NewFrameEvent:
-    def __init__(self, id, frame):
+    def __init__(self, id):
         self._id = id
-        self._frame = frame
 
     def get_id(self):
         return self._id
 
     def get_frame(self):
-        return self._frame
+        global gframe
+        # return self._frame
+        return gframe
 
 
 class EventManager():
