@@ -151,12 +151,12 @@ def setup():
         writeReg(0xF5,config_reg)
 
 
-setup()
-get_calib_param()
 
 
 if __name__ == '__main__':
         try:
+                setup()
+                get_calib_param()
                 data1 = readData(0x76)
                 # data = "%.1f,%.1f,%.1f" % (temp, hum, pres)
                 data2 = mh_z19.read_all()
