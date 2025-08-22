@@ -43,63 +43,63 @@ class MecanumDrive:
     def forward(self):
         GPIO.output(self._pin0, GPIO.HIGH)
         GPIO.output(self._pin1, GPIO.LOW)
-        GPIO.output(self._pin2, GPIO.HIGH)
-        GPIO.output(self._pin3, GPIO.LOW)
+        GPIO.output(self._pin2, GPIO.LOW)
+        GPIO.output(self._pin3, GPIO.HIGH)
         GPIO.output(self._pin4, GPIO.HIGH)
         GPIO.output(self._pin5, GPIO.LOW)
-        GPIO.output(self._pin6, GPIO.HIGH)
-        GPIO.output(self._pin7, GPIO.LOW)
+        GPIO.output(self._pin6, GPIO.LOW)
+        GPIO.output(self._pin7, GPIO.HIGH)
         return "OK"
 
     def backward(self):
         GPIO.output(self._pin0, GPIO.LOW)
         GPIO.output(self._pin1, GPIO.HIGH)
-        GPIO.output(self._pin2, GPIO.LOW)
-        GPIO.output(self._pin3, GPIO.HIGH)
+        GPIO.output(self._pin2, GPIO.HIGH)
+        GPIO.output(self._pin3, GPIO.LOW)
         GPIO.output(self._pin4, GPIO.LOW)
         GPIO.output(self._pin5, GPIO.HIGH)
-        GPIO.output(self._pin6, GPIO.LOW)
-        GPIO.output(self._pin7, GPIO.HIGH)
+        GPIO.output(self._pin6, GPIO.HIGH)
+        GPIO.output(self._pin7, GPIO.LOW)
         return "OK"
 
     def right(self):
         GPIO.output(self._pin0, GPIO.HIGH)
         GPIO.output(self._pin1, GPIO.LOW)
-        GPIO.output(self._pin2, GPIO.LOW)
-        GPIO.output(self._pin3, GPIO.HIGH)
+        GPIO.output(self._pin2, GPIO.HIGH)
+        GPIO.output(self._pin3, GPIO.LOW)
         GPIO.output(self._pin4, GPIO.LOW)
         GPIO.output(self._pin5, GPIO.HIGH)
-        GPIO.output(self._pin6, GPIO.HIGH)
-        GPIO.output(self._pin7, GPIO.LOW)
+        GPIO.output(self._pin6, GPIO.LOW)
+        GPIO.output(self._pin7, GPIO.HIGH)
         return "OK"
 
     def left(self):
         GPIO.output(self._pin0, GPIO.LOW)
         GPIO.output(self._pin1, GPIO.HIGH)
-        GPIO.output(self._pin2, GPIO.HIGH)
-        GPIO.output(self._pin3, GPIO.LOW)
-        GPIO.output(self._pin4, GPIO.HIGH)
-        GPIO.output(self._pin5, GPIO.LOW)
-        GPIO.output(self._pin6, GPIO.LOW)
-        GPIO.output(self._pin7, GPIO.HIGH)
-        return "OK"
-
-    def right_forward(self):
-        GPIO.output(self._pin0, GPIO.HIGH)
-        GPIO.output(self._pin1, GPIO.LOW)
         GPIO.output(self._pin2, GPIO.LOW)
-        GPIO.output(self._pin3, GPIO.LOW)
-        GPIO.output(self._pin4, GPIO.LOW)
+        GPIO.output(self._pin3, GPIO.HIGH)
+        GPIO.output(self._pin4, GPIO.HIGH)
         GPIO.output(self._pin5, GPIO.LOW)
         GPIO.output(self._pin6, GPIO.HIGH)
         GPIO.output(self._pin7, GPIO.LOW)
         return "OK"
 
+    def right_forward(self):
+        GPIO.output(self._pin0, GPIO.HIGH)
+        GPIO.output(self._pin1, GPIO.LOW)
+        GPIO.output(self._pin2, GPIO.HIGH)
+        GPIO.output(self._pin3, GPIO.HIGH)
+        GPIO.output(self._pin4, GPIO.LOW)
+        GPIO.output(self._pin5, GPIO.LOW)
+        GPIO.output(self._pin6, GPIO.LOW)
+        GPIO.output(self._pin7, GPIO.HIGH)
+        return "OK"
+
     def left_forward(self):
         GPIO.output(self._pin0, GPIO.LOW)
         GPIO.output(self._pin1, GPIO.LOW)
-        GPIO.output(self._pin2, GPIO.HIGH)
-        GPIO.output(self._pin3, GPIO.LOW)
+        GPIO.output(self._pin2, GPIO.LOW)
+        GPIO.output(self._pin3, GPIO.HIGH)
         GPIO.output(self._pin4, GPIO.HIGH)
         GPIO.output(self._pin5, GPIO.LOW)
         GPIO.output(self._pin6, GPIO.LOW)
@@ -113,15 +113,15 @@ class MecanumDrive:
         GPIO.output(self._pin3, GPIO.LOW)
         GPIO.output(self._pin4, GPIO.LOW)
         GPIO.output(self._pin5, GPIO.LOW)
-        GPIO.output(self._pin6, GPIO.LOW)
-        GPIO.output(self._pin7, GPIO.HIGH)
+        GPIO.output(self._pin6, GPIO.HIGH)
+        GPIO.output(self._pin7, GPIO.LOW)
         return "OK"
 
     def right_backward(self):
         GPIO.output(self._pin0, GPIO.LOW)
         GPIO.output(self._pin1, GPIO.LOW)
-        GPIO.output(self._pin2, GPIO.LOW)
-        GPIO.output(self._pin3, GPIO.HIGH)
+        GPIO.output(self._pin2, GPIO.HIGH)
+        GPIO.output(self._pin3, GPIO.LOW)
         GPIO.output(self._pin4, GPIO.LOW)
         GPIO.output(self._pin5, GPIO.HIGH)
         GPIO.output(self._pin6, GPIO.LOW)
@@ -130,23 +130,23 @@ class MecanumDrive:
 
 
     def left_spin(self):
-        GPIO.output(self._pin0, GPIO.HIGH)
-        GPIO.output(self._pin1, GPIO.LOW)
+        GPIO.output(self._pin0, GPIO.LOW)
+        GPIO.output(self._pin1, GPIO.HIGH)
         GPIO.output(self._pin2, GPIO.LOW)
         GPIO.output(self._pin3, GPIO.HIGH)
-        GPIO.output(self._pin4, GPIO.HIGH)
-        GPIO.output(self._pin5, GPIO.LOW)
+        GPIO.output(self._pin4, GPIO.LOW)
+        GPIO.output(self._pin5, GPIO.HIGH)
         GPIO.output(self._pin6, GPIO.LOW)
         GPIO.output(self._pin7, GPIO.HIGH)
         return "OK"
 
     def right_spin(self):
-        GPIO.output(self._pin0, GPIO.LOW)
-        GPIO.output(self._pin1, GPIO.HIGH)
+        GPIO.output(self._pin0, GPIO.HIGH)
+        GPIO.output(self._pin1, GPIO.LOW)
         GPIO.output(self._pin2, GPIO.HIGH)
         GPIO.output(self._pin3, GPIO.LOW)
-        GPIO.output(self._pin4, GPIO.LOW)
-        GPIO.output(self._pin5, GPIO.HIGH)
+        GPIO.output(self._pin4, GPIO.HIGH)
+        GPIO.output(self._pin5, GPIO.LOW)
         GPIO.output(self._pin6, GPIO.HIGH)
         GPIO.output(self._pin7, GPIO.LOW)
         return "OK"

@@ -9,6 +9,10 @@ import json
 
 import mh_z19
 
+# class EnvSensor(object):
+
+
+
 bus_number  = 1
 i2c_address = 0x76
 

@@ -52,7 +52,7 @@ def create_app():
                     data1 = sensor.readData(0x76)
                     data2 = sensor.mh_z19.read_all()
                     data = {**data1, **data2}
-                    print(data)
+                    print("background:{}".format(data))
                     socketio.emit('sensor_data', data, namespace='/data')
         finally:
             thread_event.clear()

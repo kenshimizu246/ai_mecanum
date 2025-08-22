@@ -20,34 +20,6 @@ class DistanceEvent(event.EventObject):
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
-
-class VL53L0Xa:
-    def __init__(self, id, xshut, address):
-        self._xshut = xshut
-        self._address = address
-        GPIO.setup(self._xshut, GPIO.OUT, initial=GPIO.LOW)
-        time.sleep(0.5)
-
-        GPIO.output(self._xshut, GPIO.HIGH)
-        time.sleep(0.1)
-        self._sensor = VL53L0X.VL53L0X(i2c_bus=1,i2c_address=0x29)
-        self._sensor.change_address(self._address)
-
-        self._sensor.open()
-        self._sensor.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
-
-        timing = self._sensor.get_timing()
-        if timing < 20000:
-            timing = 20000
-
-        self._timing = timing
-
-    def get_distance(self):
-        distance = self._sensor.get_distance()
-        time.sleep(self._timing/1000000.00)
-        return distance
-
-
 GPIO.setup(VL53_1_XSHUT, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(VL53_2_XSHUT, GPIO.OUT, initial=GPIO.LOW)
 time.sleep(0.5)
@@ -55,7 +27,6 @@ time.sleep(0.5)
 GPIO.output(VL53_1_XSHUT, GPIO.HIGH)
 time.sleep(0.1)
 sensor1 = VL53L0X.VL53L0X(i2c_bus=1,i2c_address=0x29)
-
 sensor1.change_address(0x2B)
 
 GPIO.output(VL53_2_XSHUT, GPIO.HIGH)

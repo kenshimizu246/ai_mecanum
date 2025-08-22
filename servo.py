@@ -1,7 +1,15 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
-servo = 18
+"""
+12 PWM0 GPIO 1   BCM 18 
+32 PWM0 GPIO 26  BCM 12
+33 PWM1 GPIO 23  BCM 13
+35 PWM1 GPIO 24  BCM 19
+"""
+
+servo0 = 13
+servo1 = 18
 frequency = 50
 
 angle_0 = 2.5 / 20 * 100
@@ -13,29 +21,29 @@ angle_180 = 0.5 / 20 * 100
 GPIO.setmode(GPIO.BCM)
 print("set mode...")
 GPIO.setwarnings(False)
-GPIO.setup(servo, GPIO.OUT)
+GPIO.setup(servo0, GPIO.OUT)
 
-pwm = GPIO.PWM(servo, frequency)
-print("set pwm...")
+pwm1 = GPIO.PWM(servo0, frequency)
+print("set pwm1...")
 
-pwm.start(angle_0)
-print("set pwm angle 0...")
+pwm1.start(angle_0)
+print("set pwm1 angle 0...")
 sleep(1)
-pwm.ChangeDutyCycle(angle_45)
-print("set pwm angle 45...")
+pwm1.ChangeDutyCycle(angle_45)
+print("set pwm1 angle 45...")
 sleep(1)
 sleep(1)
-pwm.ChangeDutyCycle(angle_90)
-print("set pwm angle 90...")
+pwm1.ChangeDutyCycle(angle_90)
+print("set pwm1 angle 90...")
 sleep(1)
-pwm.ChangeDutyCycle(angle_135)
-print("set pwm angle 135...")
+pwm1.ChangeDutyCycle(angle_135)
+print("set pwm1 angle 135...")
 sleep(1)
-pwm.ChangeDutyCycle(angle_180)
-print("set pwm angle 180...")
+pwm1.ChangeDutyCycle(angle_180)
+print("set pwm1 angle 180...")
 sleep(1)
-pwm.ChangeDutyCycle(angle_0)
-print("set pwm angle 0...")
+pwm1.ChangeDutyCycle(angle_0)
+print("set pwm1 angle 0...")
 sleep(1)
 
 for x in range(0, 10):
@@ -45,21 +53,21 @@ for x in range(0, 10):
         rr = range(25, 4, -1)
     for i in rr:
         angle = (i / 10)/ 20 * 100
-        pwm.ChangeDutyCycle(angle)
-        print("set pwm angle {}...".format(angle))
+        pwm1.ChangeDutyCycle(angle)
+        print("set pwm1 angle {}...".format(angle))
         sleep(0.1)
 sleep(1)
-pwm.ChangeDutyCycle(angle_0)
+pwm1.ChangeDutyCycle(angle_0)
 sleep(1)
 
 angles = [angle_0, angle_45, angle_90, angle_135, angle_180, angle_135, angle_90, angle_45, angle_0]
 
 for i in range(0, 100):
     for angle in angles:
-        pwm.ChangeDutyCycle(angle)
+        pwm1.ChangeDutyCycle(angle)
         sleep(0.1)
 
 
 
-pwm.stop()
+pwm1.stop()
 GPIO.cleanup()
