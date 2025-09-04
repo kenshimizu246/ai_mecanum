@@ -21,30 +21,49 @@ angle_180 = 0.5 / 20 * 100
 GPIO.setmode(GPIO.BCM)
 print("set mode...")
 GPIO.setwarnings(False)
+
 GPIO.setup(servo0, GPIO.OUT)
+GPIO.setup(servo1, GPIO.OUT)
 
-pwm1 = GPIO.PWM(servo0, frequency)
-print("set pwm1...")
+hpwm = GPIO.PWM(servo0, frequency)
+print("set hpwm...")
+vpwm = GPIO.PWM(servo1, frequency)
+print("set vpwm...")
 
-pwm1.start(angle_0)
-print("set pwm1 angle 0...")
+vpwm.start(angle_45)
+hpwm.start(angle_90)
 sleep(1)
-pwm1.ChangeDutyCycle(angle_45)
-print("set pwm1 angle 45...")
+
+# Center
+vpwm.ChangeDutyCycle(angle_45)
+hpwm.ChangeDutyCycle(angle_90)
 sleep(1)
+
+# Left Forward
+vpwm.ChangeDutyCycle(angle_45)
+hpwm.ChangeDutyCycle(angle_135)
 sleep(1)
-pwm1.ChangeDutyCycle(angle_90)
-print("set pwm1 angle 90...")
+
+# Right Forward
+vpwm.ChangeDutyCycle(angle_45)
+hpwm.ChangeDutyCycle(angle_45)
 sleep(1)
-pwm1.ChangeDutyCycle(angle_135)
-print("set pwm1 angle 135...")
+
+# Center
+vpwm.ChangeDutyCycle(angle_45)
+hpwm.ChangeDutyCycle(angle_90)
 sleep(1)
-pwm1.ChangeDutyCycle(angle_180)
-print("set pwm1 angle 180...")
+
+# Left
+vpwm.ChangeDutyCycle(angle_45)
+hpwm.ChangeDutyCycle(angle_180)
 sleep(1)
-pwm1.ChangeDutyCycle(angle_0)
-print("set pwm1 angle 0...")
+
+# Right
+vpwm.ChangeDutyCycle(angle_45)
+hpwm.ChangeDutyCycle(angle_0)
 sleep(1)
+
 
 for x in range(0, 10):
     if(x % 2):
@@ -53,21 +72,26 @@ for x in range(0, 10):
         rr = range(25, 4, -1)
     for i in rr:
         angle = (i / 10)/ 20 * 100
-        pwm1.ChangeDutyCycle(angle)
-        print("set pwm1 angle {}...".format(angle))
+        hpwm.ChangeDutyCycle(angle)
+        print("set hpwm angle {}...".format(angle))
         sleep(0.1)
 sleep(1)
-pwm1.ChangeDutyCycle(angle_0)
+hpwm.ChangeDutyCycle(angle_0)
 sleep(1)
 
 angles = [angle_0, angle_45, angle_90, angle_135, angle_180, angle_135, angle_90, angle_45, angle_0]
 
 for i in range(0, 100):
     for angle in angles:
-        pwm1.ChangeDutyCycle(angle)
+        hpwm.ChangeDutyCycle(angle)
         sleep(0.1)
 
+hpwm = GPIO.PWM(servo0, frequency)
+hpwm.start(angle_0)
+hpwm.ChangeDutyCycle(angle_90)
+hpwm.stop()
 
 
-pwm1.stop()
+vpwm.stop()
+hpwm.stop()
 GPIO.cleanup()

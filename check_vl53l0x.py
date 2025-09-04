@@ -14,6 +14,8 @@ import event
 
 VL53_1_XSHUT = 20
 VL53_2_XSHUT = 21
+# VL53_1_XSHUT = 38
+# VL53_2_XSHUT = 40
 
 stop = False
 
@@ -29,9 +31,7 @@ def worker(vl, q):
 if __name__ == '__main__':
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
+#     GPIO.setmode(GPIO.BOARD)
     
     vl = MyVL53L0X()
     vv = vl.get_data()

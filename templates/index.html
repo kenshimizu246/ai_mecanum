@@ -49,8 +49,16 @@ const socket = io.connect('/data')
 socket.on('sensor_data', (sensor_data) => {
     console.log('message', sensor_data)
     const li = document.createElement('li')
-    li.appendChild(document.createTextNode('hum: '+sensor_data['temp'] + ' \ hum: ' + sensor_data['hum'] + ' \ pres: ' + sensor_data['pres'] + ' \ co2' + sensor_data['co2']))
+    li.appendChild(document.createTextNode(
+        'temp: '+sensor_data['temp'] + 
+        ' \ hum: ' + sensor_data['hum'] + 
+        ' \ pres: ' + sensor_data['pres'] +
+        ' \ co2' + sensor_data['co2'] +
+        ' \ front' + sensor_data['front'] +
+        ' \ back' + sensor_data['back']
+    ))
     document.getElementById('sensor_data').appendChild(li)
+    document.getElementById('status').removeChild(document.getElementById('status').firstChild)
     document.getElementById('temp').removeChild(document.getElementById('temp').firstChild)
     document.getElementById('temp').appendChild(document.createTextNode(sensor_data['temp']))
     document.getElementById('hum').removeChild(document.getElementById('hum').firstChild)
@@ -59,6 +67,10 @@ socket.on('sensor_data', (sensor_data) => {
     document.getElementById('pres').appendChild(document.createTextNode(sensor_data['pres']))
     document.getElementById('co2').removeChild(document.getElementById('co2').firstChild)
     document.getElementById('co2').appendChild(document.createTextNode(sensor_data['co2']))
+    document.getElementById('front').removeChild(document.getElementById('front').firstChild)
+    document.getElementById('front').appendChild(document.createTextNode(sensor_data['front']))
+    document.getElementById('back').removeChild(document.getElementById('back').firstChild)
+    document.getElementById('back').appendChild(document.createTextNode(sensor_data['back']))
 })
 
 
@@ -90,6 +102,10 @@ socket.on('sensor_data', (sensor_data) => {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
     <table class="table">
       <tr>
+        <td scope="col">Status</td>
+        <td scope="col" id="status">na</td>
+      </tr>
+      <tr>
         <td scope="col">Temparature</td>
         <td scope="col" id="temp">na</td>
       </tr>
@@ -104,6 +120,14 @@ socket.on('sensor_data', (sensor_data) => {
       <tr>
         <td scope="col">CO2</td>
         <td scope="col" id="co2">na</td>
+      </tr>
+      <tr>
+        <td scope="col">Front</td>
+        <td scope="col" id="front">na</td>
+      </tr>
+      <tr>
+        <td scope="col">Back</td>
+        <td scope="col" id="back">na</td>
       </tr>
     </table>
     <ul id="sensor_data"></ul>

@@ -5,8 +5,16 @@ import RPi.GPIO as GPIO
 
 import event
 
+"""
+36 : GPIO 27 : 16
+38 : GPIO 28 : 20
+40 : GPIO 29 : 21
+"""
+
 VL53_1_XSHUT = 20
 VL53_2_XSHUT = 21
+# VL53_1_XSHUT = 38
+# VL53_2_XSHUT = 40
 
 class DistanceEvent(event.EventObject):
     def __init__(self, name, id, distance):
@@ -54,6 +62,7 @@ if __name__ == '__main__':
     try:
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
+        # GPIO.setmode(GPIO.BOARD)
 
         vl = MyVL53L0X()
         vv = vl.get_data()
