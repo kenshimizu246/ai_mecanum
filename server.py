@@ -31,7 +31,7 @@ vl_data = None
 
 drive_mode = "manual" # "auto", "slalom"
 drive_status = "manual"
-dist_limit = 100
+dist_limit = 250
 
 class DriveModeConsts:
     MANUAL = "manual"
@@ -297,6 +297,61 @@ def create_app():
     def right_spin():
         res = dv.right_spin()
         return jsonify({'action': 'right_spin', 'result': res})
+
+    # Camera Only
+    @app.route('/api/frnt_cam_center', methods=['GET'])
+    def frnt_cam_center():
+        _do_servo(hpwm, angle_90)
+        _do_servo(vpwm, angle_45)
+        res = "OK"
+        return jsonify({'action': 'front_camera_center', 'result': res})
+
+    @app.route('/api/frnt_cam_right', methods=['GET'])
+    def frnt_cam_right():
+        _do_servo(hpwm, angle_0)
+        _do_servo(vpwm, angle_45)
+        res = "OK"
+        return jsonify({'action': 'front_camera_center', 'result': res})
+
+    @app.route('/api/frnt_cam_left', methods=['GET'])
+    def frnt_cam_left():
+        _do_servo(hpwm, angle_180)
+        _do_servo(vpwm, angle_45)
+        res = "OK"
+        return jsonify({'action': 'front_camera_center', 'result': res})
+
+    @app.route('/api/frnt_cam_frnt_right', methods=['GET'])
+    def frnt_cam_frnt_right():
+        _do_servo(hpwm, angle_45)
+        _do_servo(vpwm, angle_45)
+        res = "OK"
+        return jsonify({'action': 'front_camera_center', 'result': res})
+
+    @app.route('/api/frnt_cam_frnt_left', methods=['GET'])
+    def frnt_cam_frnt_left():
+        _do_servo(hpwm, angle_135)
+        _do_servo(vpwm, angle_45)
+        res = "OK"
+        return jsonify({'action': 'front_camera_center', 'result': res})
+
+    @app.route('/api/frnt_cam_up', methods=['GET'])
+    def frnt_cam_up():
+        _do_servo(vpwm, angle_90)
+        res = "OK"
+        return jsonify({'action': 'front_camera_center', 'result': res})
+
+    @app.route('/api/frnt_cam_top', methods=['GET'])
+    def frnt_cam_top():
+        _do_servo(vpwm, angle_135)
+        res = "OK"
+        return jsonify({'action': 'front_camera_center', 'result': res})
+
+    @app.route('/api/frnt_cam_down', methods=['GET'])
+    def frnt_cam_down():
+        _do_servo(vpwm, angle_0)
+        res = "OK"
+        return jsonify({'action': 'front_camera_center', 'result': res})
+
 
     @app.route('/api/shutdown', methods=['GET'])
     def shutdown():

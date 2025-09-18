@@ -78,7 +78,7 @@ class MecanumDrive:
         self._status = "backward"
         return "OK"
 
-    def right(self):
+    def left(self):
         GPIO.output(self._pin0, GPIO.HIGH)
         GPIO.output(self._pin1, GPIO.LOW)
         GPIO.output(self._pin2, GPIO.HIGH)
@@ -90,7 +90,7 @@ class MecanumDrive:
         self._status = "right"
         return "OK"
 
-    def left(self):
+    def right(self):
         GPIO.output(self._pin0, GPIO.LOW)
         GPIO.output(self._pin1, GPIO.HIGH)
         GPIO.output(self._pin2, GPIO.LOW)
@@ -102,7 +102,7 @@ class MecanumDrive:
         self._status = "left"
         return "OK"
 
-    def right_forward(self):
+    def left_forward(self):
         GPIO.output(self._pin0, GPIO.HIGH)
         GPIO.output(self._pin1, GPIO.LOW)
         GPIO.output(self._pin2, GPIO.HIGH)
@@ -114,7 +114,7 @@ class MecanumDrive:
         self._status = "right_forward"
         return "OK"
 
-    def left_forward(self):
+    def right_forward(self):
         GPIO.output(self._pin0, GPIO.LOW)
         GPIO.output(self._pin1, GPIO.LOW)
         GPIO.output(self._pin2, GPIO.LOW)
@@ -151,7 +151,7 @@ class MecanumDrive:
         return "OK"
 
 
-    def left_spin(self):
+    def right_spin(self):
         GPIO.output(self._pin0, GPIO.LOW)
         GPIO.output(self._pin1, GPIO.HIGH)
         GPIO.output(self._pin2, GPIO.LOW)
@@ -163,7 +163,7 @@ class MecanumDrive:
         self._status = "left_spin"
         return "OK"
 
-    def right_spin(self):
+    def left_spin(self):
         GPIO.output(self._pin0, GPIO.HIGH)
         GPIO.output(self._pin1, GPIO.LOW)
         GPIO.output(self._pin2, GPIO.HIGH)
