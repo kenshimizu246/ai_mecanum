@@ -53,24 +53,19 @@ socket.on('sensor_data', (sensor_data) => {
         'temp: '+sensor_data['temp'] + 
         ' \ hum: ' + sensor_data['hum'] + 
         ' \ pres: ' + sensor_data['pres'] +
-        ' \ co2' + sensor_data['co2'] +
-        ' \ front' + sensor_data['front'] +
-        ' \ back' + sensor_data['back']
+        ' \ co2:' + sensor_data['co2'] +
+        ' \ front:' + sensor_data['front'] +
+        ' \ back:' + sensor_data['back'] +
+        ' \ time:' + sensor_data['timestamp'] 
     ))
     document.getElementById('sensor_data').appendChild(li)
-    document.getElementById('status').removeChild(document.getElementById('status').firstChild)
-    document.getElementById('temp').removeChild(document.getElementById('temp').firstChild)
-    document.getElementById('temp').appendChild(document.createTextNode(sensor_data['temp']))
-    document.getElementById('hum').removeChild(document.getElementById('hum').firstChild)
-    document.getElementById('hum').appendChild(document.createTextNode(sensor_data['hum']))
-    document.getElementById('pres').removeChild(document.getElementById('pres').firstChild)
-    document.getElementById('pres').appendChild(document.createTextNode(sensor_data['pres']))
-    document.getElementById('co2').removeChild(document.getElementById('co2').firstChild)
-    document.getElementById('co2').appendChild(document.createTextNode(sensor_data['co2']))
-    document.getElementById('front').removeChild(document.getElementById('front').firstChild)
-    document.getElementById('front').appendChild(document.createTextNode(sensor_data['front']))
-    document.getElementById('back').removeChild(document.getElementById('back').firstChild)
-    document.getElementById('back').appendChild(document.createTextNode(sensor_data['back']))
+    document.getElementById('status').textContent = sensor_data['timestamp']
+    document.getElementById('temp').textContent = sensor_data['temp']
+    document.getElementById('hum').textContent = sensor_data['hum']
+    document.getElementById('pres').textContent = sensor_data['pres']
+    document.getElementById('co2').textContent = sensor_data['co2']
+    document.getElementById('front').textContent = sensor_data['front']
+    document.getElementById('back').textContent = sensor_data['back']
 })
 
 

@@ -3,7 +3,6 @@ from flask_socketio import SocketIO, emit
 
 import mecanum_drive as md
 
-
 from picame2_lib import MyCamera, MyConf, MyThread, evtMgr
 import cv2
 from time import sleep
@@ -73,7 +72,7 @@ frequency = 50
 def _do_servo(pwm, angle):
     pwm.ChangeFrequency(50)
     pwm.start(angle)
-    sleep(0.3)
+    sleep(0.5)
     pwm.ChangeDutyCycle(angle)
     pwm.stop()
 
@@ -139,8 +138,8 @@ def create_app():
         while(not vl_stop):
             distance0 = sensor0.get_distance()
             distance1 = sensor1.get_distance()
-            # ts = datetime.datetime.now(datetime.UTC)
-            ts = None
+            ts = str(datetime.datetime.now(datetime.UTC))
+            # ts = None
             q.put({"back": distance0, "front": distance1, "timestamp": ts, "type": "distance"})
             sleep(vl_timing/1000000.00)
         vl_stop = True
