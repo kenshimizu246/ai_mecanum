@@ -10,6 +10,13 @@
             width: 96px;
             height: 96px;
         }
+        table.ctrltbl {
+            width: 540px;
+            height: 340px;
+        }
+        table.datatbl {
+            width: 540px;
+        }
     </style>
   </head>
   <body>
@@ -72,7 +79,7 @@ socket.on('sensor_data', (sensor_data) => {
 </script>
     <h1>Mecanum Controller</h1>
     <img src="/video_feed"/>
-    <table class="table">
+    <table class="ctrltbl">
       <tr>
         <td scope="col"><img src="images/left_forward.svg" class="ctrlbtn" alt="left forward" title="left forward" onclick="doLeftForward();"></td>
         <td scope="col"><img src="images/forward.svg" class="ctrlbtn" alt="forward" title="forward" onclick="doForward();"></td>
@@ -95,7 +102,7 @@ socket.on('sensor_data', (sensor_data) => {
     </table>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-    <table class="table">
+    <table class="datatbl">
       <tr>
         <td scope="col">Status</td>
         <td scope="col" id="status">na</td>
