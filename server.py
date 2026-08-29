@@ -20,6 +20,7 @@ import VL53L0X
 import event
 
 is_sensor = False
+is_vl53l0x = False
 
 VL53_0_XSHUT = 38
 VL53_1_XSHUT = 40
@@ -106,33 +107,6 @@ def create_app():
         print("bme280_mh_z19 error")
         is_sensor = False
 
-    GPIO.setup(VL53_0_XSHUT, GPIO.OUT, initial=GPIO.LOW)
-    GPIO.setup(VL53_1_XSHUT, GPIO.OUT, initial=GPIO.LOW)
-    sleep(0.5)
-
-    GPIO.output(VL53_0_XSHUT, GPIO.HIGH)
-    sleep(0.1)
-    sensor0 = VL53L0X.VL53L0X(i2c_bus=1,i2c_address=0x29)
-    sensor0.change_address(0x2B)
-
-    GPIO.output(VL53_1_XSHUT, GPIO.HIGH)
-    sleep(0.1)
-    sensor1 = VL53L0X.VL53L0X(i2c_bus=1,i2c_address=0x29)
-    sensor1.change_address(0x2D)
-
-    sensor0.open()
-    sensor0.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
-    sensor1.open()
-    sensor1.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
-
-    vl_timing = sensor0.get_timing()
-    if vl_timing < 20000:
-        vl_timing = 20000
-    print("Read Timing = ", vl_timing/1000, " (msec)")
-
-    q = Queue()
-    lock = Lock()
-
     def vl_worker(q, lock):
         global vl_stop, vl_timing
         while(not vl_stop):
@@ -147,9 +121,42 @@ def create_app():
         q.put({"back": distance0, "front": distance1, "timestamp": ts}) # put dummy before vl_stop = True
         print("worker end.")
 
-    t1 = Thread(target=vl_worker, args=(q, lock))
-    t1.daemon = True
-    t1.start()
+    q = Queue()
+    lock = Lock()
+    try:
+        GPIO.setup(VL53_0_XSHUT, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(VL53_1_XSHUT, GPIO.OUT, initial=GPIO.LOW)
+        sleep(0.5)
+
+        GPIO.output(VL53_0_XSHUT, GPIO.HIGH)
+        sleep(0.1)
+        sensor0 = VL53L0X.VL53L0X(i2c_bus=1,i2c_address=0x29)
+        sensor0.change_address(0x2B)
+
+        GPIO.output(VL53_1_XSHUT, GPIO.HIGH)
+        sleep(0.1)
+        sensor1 = VL53L0X.VL53L0X(i2c_bus=1,i2c_address=0x29)
+        sensor1.change_address(0x2D)
+
+        sensor0.open()
+        sensor0.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
+        sensor1.open()
+        sensor1.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
+
+        vl_timing = sensor0.get_timing()
+        if vl_timing < 20000:
+            vl_timing = 20000
+        print("Read Timing = ", vl_timing/1000, " (msec)")
+
+        t1 = Thread(target=vl_worker, args=(q, lock))
+        t1.daemon = True
+        t1.start()
+        is_vl53l0x = True
+        vl_stop = False
+    except OSError:
+        print("bme280_mh_z19 error")
+        is_vl53l0x = False
+        vl_stop = True
 
     def is_aut():
         return True
